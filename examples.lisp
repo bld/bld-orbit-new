@@ -9,7 +9,7 @@
 		 :center :ssb
 		 :ref :eclipj2000
 		 :abcorr :none
-		 :mu (with-kernel (ephemeris-path "gm_de431.tpc")
+		 :mu (with-ephemeris "gm_de431.tpc"
 		       (body-vrd :sun :gm 1))))
 
 (defparameter *sun*
@@ -19,7 +19,7 @@
 		 :center :ssb
 		 :ref :eclipj2000
 		 :abcorr :none
-		 :mu (with-kernel (ephemeris-path "gm_de431.tpc")
+		 :mu (with-ephemeris "gm_de431.tpc"
 		       (body-vrd :sun :gm 1))
 		 :ls 1361.3477d0 ; solar luminosity in W/m^2 (same with km)
 		 :ls-du *au*))
@@ -31,7 +31,7 @@
 		 :center :ssb
 		 :ref :eclipj2000
 		 :abcorr :none
-		 :mu (with-kernel (ephemeris-path "gm_de431.tpc")
+		 :mu (with-ephemeris "gm_de431.tpc"
 		       (body-vrd :sun :gm 1))))
 
 ;;; Cartesian
