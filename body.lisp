@@ -44,8 +44,17 @@ by environment variable EPHEMERIS_DIR"
     (let ((pv (spk-pos name (utcsec-to-ephemeris-time teph) center :ref ref :abcorr abcorr)))
       (ve3 :e1 (aref pv 0) :e2 (aref pv 1) :e3 (aref pv 2)))))
 
-(defmethod body-trajectory (b t0 tf &key nsteps)
+(defmethod body-trajectory (b t0 tf &key (nsteps 100))
   (with-ephemeris (slot-value b 'ephemeris)
     (loop for tm = t0 then (incf tm (/ (- tf t0) nsteps))
-       collect (list tm (body-position *earth* tm))
+       collect (list tm (body-position b tm))
        while (< tm tf))))
+
+(defmethod export-body-traj (filename traj)
+  (with-open-file (stream filename :direction :output :if-exists :supersede)
+    (write-csv
+     (loop for (tm r) in traj
+	collect (cons tm (coerce (coef r) 'list)))
+     :stream stream
+     :separator #\space)))
+     
