@@ -38,14 +38,14 @@
 
 (defun propagate-cart-fixed (problem)
   (lethash (eom t0 tf x0 hmin hmax cb sun) problem
-    (with-kernel (slot-value cb 'ephemeris)
-      (with-kernel (slot-value sun 'ephemeris)
+    (with-kernel (ephemeris-path (slot-value cb 'ephemeris))
+      (with-kernel (ephemeris-path (slot-value sun 'ephemeris))
 	(rka eom t0 tf x0 :param problem :hmin hmin :hmax hmax :tol 1d-9)))))
 
 (defun propagate-cart-table (problem)
   (lethash (eom x0 t0 tf rs-table cb sun hmin hmax tol) problem
-    (with-kernel (slot-value cb 'ephemeris)
-      (with-kernel (slot-value sun 'ephemeris)
+    (with-kernel (ephemeris-path (slot-value cb 'ephemeris))
+      (with-kernel (ephemeris-path (slot-value sun 'ephemeris))
 	(loop for rsi in rs-table
 	   for x0i = x0
 	   then (second (car (last result)))

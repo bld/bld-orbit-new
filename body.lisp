@@ -1,5 +1,17 @@
 (in-package :bld-orbit-new)
 
+(defun ephemeris-path (ephemeris)
+  "Generate full path to an ephemeris file in the directory specified
+by environment variable EPHEMERIS_DIR"
+  (namestring
+   (merge-pathnames-as-file
+    (pathname-as-directory (uiop:getenv "EPHEMERIS_DIR"))
+    ephemeris)))
+
+(defmacro with-ephemeris (ephemeris &body body)
+  `(with-kernel (ephemeris-path ,ephemeris)
+     ,@body))
+
 (defclass body ()
   ((ephemeris :initarg :ephemeris)
    (name :initarg :name)
@@ -19,7 +31,7 @@
 (defmethod position-velocity ((b body) teph)
   "Position & velocity of body"
   (with-slots (ephemeris name ref abcorr center) b
-    (with-kernel ephemeris
+    (with-ephemeris ephemeris
       (let ((pvv (spk-ezr name (utcsec-to-ephemeris-time teph) center :ref ref :abcorr abcorr)))
 	(make-instance 
 	 'cart-state
@@ -32,3 +44,8 @@
     (let ((pv (spk-pos name (utcsec-to-ephemeris-time teph) center :ref ref :abcorr abcorr)))
       (ve3 :e1 (aref pv 0) :e2 (aref pv 1) :e3 (aref pv 2)))))
 
+(defmethod body-trajectory (b t0 tf &key nsteps)
+  (with-ephemeris (slot-value b 'ephemeris)
+    (loop for tm = t0 then (incf tm (/ (- tf t0) nsteps))
+       collect (list tm (body-position *earth* tm))
+       while (< tm tf))))

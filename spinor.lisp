@@ -69,16 +69,16 @@
 
 (defun propagate-spinor-fixed (problem)
   (lethash (eom s0 sf x0 hmin hmax cb sun stopfn stopval stoptest) problem
-    (with-kernel (slot-value cb 'ephemeris)
-      (with-kernel (slot-value sun 'ephemeris)
+    (with-kernel (ephemeris-path (slot-value cb 'ephemeris))
+      (with-kernel (ephemeris-path (slot-value sun 'ephemeris))
 	(rka-stop-nr eom s0 sf x0
 		     :param problem :hmin hmin :hmax hmax
 		     :stopfn stopfn :stopval stopval :stoptest stoptest :tol 1d-9)))))
 
 (defun propagate-spinor-table (p)
   (lethash (eom s0 sf rs-table x0 hmin hmax cb sun) p
-    (with-kernel (slot-value cb 'ephemeris)
-      (with-kernel (slot-value sun 'ephemeris)
+    (with-kernel (ephemeris-path (slot-value cb 'ephemeris))
+      (with-kernel (ephemeris-path (slot-value sun 'ephemeris))
 	(loop for rsi in rs-table
 	   for x0i = x0 then (second (car (last result)))
 	   for s0i = s0 then (first (car (last result)))

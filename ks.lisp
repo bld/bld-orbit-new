@@ -75,6 +75,9 @@
     :problem problem)
    s))
 
+(defmethod to-cartesian (s (x ks-state) problem)
+  (to-cartesian s (to-spinor s x problem) problem))
+
 (defmethod to-initial-ks (s (x0 spinor-state) problem)
   "Convert spinor state to an initial KS given S, X, and PROBLEM"
   (setf (s x0) s)
@@ -99,16 +102,16 @@
 
 (defun propagate-ks-fixed (problem)
   (lethash (eom s0 sf x0 hmin hmax cb sun stopfn stopval stoptest) problem
-    (with-kernel (slot-value cb 'ephemeris)
-      (with-kernel (slot-value sun 'ephemeris)
+    (with-kernel (ephemeris-path (slot-value cb 'ephemeris))
+      (with-kernel (ephemeris-path (slot-value sun 'ephemeris))
 	(rka-stop-nr eom s0 sf x0
 		     :param problem :hmin hmin :hmax hmax
 		     :stopfn stopfn :stopval stopval :stoptest stoptest :tol 1d-9)))))
 
 (defun propagate-ks-table (p)
   (lethash (eom s0 sf rs-table x0 hmin hmax cb sun) p
-    (with-kernel (slot-value cb 'ephemeris)
-      (with-kernel (slot-value sun 'ephemeris)
+    (with-kernel (ephemeris-path (slot-value cb 'ephemeris))
+      (with-kernel (ephemeris-path (slot-value sun 'ephemeris))
 	(loop for rsi in rs-table
 	   for x0i = x0 then (second (car (last result)))
 	   for s0i = s0 then (first (car (last result)))
@@ -122,3 +125,14 @@
 	      :param p :hmin hmin :hmax hmax
 	      :stopfn stopfn :stopval stopval :stoptest stoptest :tol 1d-9)
 	   append result)))))
+
+(defun export-ks-traj (filename result problem)
+  (with-open-file (stream filename :direction :output :if-exists :supersede)
+    (write-csv
+     (loop for (s x) in result
+	for (xc tm) = (multiple-value-list (to-cartesian s x problem))
+	collect (cons tm
+		      (append
+		       (map 'list #'identity (coef (r xc)))
+		       (map 'list #'identity (coef (v xc))))))
+     :stream stream :separator #\Space)))

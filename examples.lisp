@@ -4,34 +4,34 @@
 
 (defparameter *ssb*
   (make-instance 'body
-		 :ephemeris "ephemeris/de430.bsp"
+		 :ephemeris "de430.bsp"
 		 :name :ssb
 		 :center :ssb
-		 :ref :j2000
+		 :ref :eclipj2000
 		 :abcorr :none
-		 :mu (with-kernel "ephemeris/gm_de431.tpc"
+		 :mu (with-kernel (ephemeris-path "gm_de431.tpc")
 		       (body-vrd :sun :gm 1))))
 
 (defparameter *sun*
   (make-instance 'body
-		 :ephemeris "ephemeris/de430.bsp"
+		 :ephemeris (ephemeris-path "de430.bsp")
 		 :name :sun
 		 :center :ssb
-		 :ref :j2000
+		 :ref :eclipj2000
 		 :abcorr :none
-		 :mu (with-kernel "ephemeris/gm_de431.tpc"
+		 :mu (with-kernel (ephemeris-path "gm_de431.tpc")
 		       (body-vrd :sun :gm 1))
 		 :ls 1361.3477d0 ; solar luminosity in W/m^2 (same with km)
 		 :ls-du *au*))
 
 (defparameter *earth*
   (make-instance 'body
-		 :ephemeris "ephemeris/de430.bsp"
+		 :ephemeris "de430.bsp"
 		 :name :earth
 		 :center :ssb
-		 :ref :j2000
+		 :ref :eclipj2000
 		 :abcorr :none
-		 :mu (with-kernel "ephemeris/gm_de431.tpc"
+		 :mu (with-kernel (ephemeris-path "gm_de431.tpc")
 		       (body-vrd :sun :gm 1))))
 
 ;;; Cartesian

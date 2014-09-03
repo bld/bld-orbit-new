@@ -1,5 +1,5 @@
 (defpackage :bld-orbit-new
-  (:use :cl :bld-ga :bld-e3 :bld-e2 :bld-ode :local-time :cl-spice :cl-nsga2 :cells :unit-formulas)
+  (:use :cl :bld-ga :bld-e3 :bld-e2 :bld-ode :local-time :cl-spice :cl-nsga2 :cells :unit-formulas :cl-fad)
   (:shadowing-import-from :bld-gen
     + - * / expt
     sin cos tan
