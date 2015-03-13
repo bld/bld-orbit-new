@@ -104,26 +104,29 @@
   (lethash (eom s0 sf x0 hmin hmax cb sun stopfn stopval stoptest) problem
     (with-kernel (ephemeris-path (slot-value cb 'ephemeris))
       (with-kernel (ephemeris-path (slot-value sun 'ephemeris))
-	(rka-stop-nr eom s0 sf x0
-		     :param problem :hmin hmin :hmax hmax
-		     :stopfn stopfn :stopval stopval :stoptest stoptest :tol 1d-9)))))
+	(rka-stop-nr 
+	 eom s0 sf x0
+	  :tol 1d-9 :param problem :hmin hmin :hmax hmax
+	  :stopfn stopfn :stopval stopval :stoptest stoptest :stoptol stoptol)))))
 
 (defun propagate-ks-table (p)
-  (lethash (eom s0 sf rs-table x0 hmin hmax cb sun) p
+  (lethash (eom s0 dsf rs-table x0 hmin hmax cb sun) p
     (with-kernel (ephemeris-path (slot-value cb 'ephemeris))
       (with-kernel (ephemeris-path (slot-value sun 'ephemeris))
 	(loop for rsi in rs-table
 	   for x0i = x0 then (second (car (last result)))
 	   for s0i = s0 then (first (car (last result)))
+	   for sfi = (+ s0i dsf)
 	   for stopfn = (setf (gethash :stopfn p) (gethash :stopfn rsi))
 	   for stopval = (setf (gethash :stopval p) (gethash :stopval rsi))
 	   for stoptest = (setf (gethash :stoptest p) (gethash :stoptest rsi))
+	   for stoptol = (setf (gethash :stoptol p) (gethash :stoptol rsi))
 	   for rs = (setf (gethash :rs p) (gethash :rs rsi))
 	   for result =
 	     (rka-stop-nr 
-	      eom s0i sf x0i
-	      :param p :hmin hmin :hmax hmax
-	      :stopfn stopfn :stopval stopval :stoptest stoptest :tol 1d-9)
+	      eom s0i sfi x0i
+	      :tol 1d-9 :param p :hmin hmin :hmax hmax
+	      :stopfn stopfn :stopval stopval :stoptest stoptest :stoptol stoptol)
 	   append result)))))
 
 (defun export-ks-traj (filename result problem)
