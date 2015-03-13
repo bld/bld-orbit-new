@@ -1,8 +1,8 @@
 (in-package :bld-orbit-new)
 
-(defparameter *J2000* (list (ve3 :e1 1d0)
-			    (ve3 :e2 1d0)
-			    (ve3 :e3 1d0)) "J2000 inertial frame")
+(defparameter *J2000* (list (make-instance 've3 :e1 1d0)
+			    (make-instance 've3 :e2 1d0)
+			    (make-instance 've3 :e3 1d0)) "J2000 inertial frame")
 
 ;;; Frame functions 
 
