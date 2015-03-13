@@ -57,7 +57,7 @@
    :area (convert-unit '(1260d0 m^2) 'km^2)
    :iframe *j2000*
    :nfun #'first
-   :rs (rotor (bve3 :e1e2 1) (atan (/ (sqrt 2))))
+   :rs (rotor (make-instance 'bve3 :e1e2 1) (atan (/ (sqrt 2))))
    :t0 (coerce (encode-universal-time 0 0 0 27 2 2014 0) 'double-float)
    :tf (coerce (encode-universal-time 0 0 0 27 2 2015 0) 'double-float)
    :x0 nil
@@ -87,11 +87,11 @@
    :tf (coerce (encode-universal-time 0 0 0 27 2 2015 0) 'double-float)
    :rs-table (list
 	      (make-hash
-	       :rs (rotor (bve3 :e1e2 1) (atan (/ (sqrt 2d0))))
+	       :rs (rotor (make-instance 'bve3 :e1e2 1) (atan (/ (sqrt 2d0))))
 	       :t0 t0
 	       :tf (/ (+ t0 tf) 2))
 	      (make-hash
-	       :rs (rotor (bve3 :e1e2 1) (atan (/ (sqrt 2d0))))
+	       :rs (rotor (make-instance 'bve3 :e1e2 1) (atan (/ (sqrt 2d0))))
 	       :t0 (/ (+ t0 tf) 2)
 	       :tf tf))
    :x0 nil
@@ -118,7 +118,7 @@
    :area (convert-unit '(1260d0 m^2) 'km^2)
    :iframe *j2000*
    :nfun #'first
-   :rs (rotor (bve3 :e1e2 1) (atan (/ (sqrt 2))))
+   :rs (rotor (make-instance 'bve3 :e1e2 1) (atan (/ (sqrt 2))))
    :t0 (coerce (encode-universal-time 0 0 0 27 2 2014 0) 'double-float)
    :tf (coerce (encode-universal-time 0 0 0 27 2 2015 0) 'double-float)
    :s0 0d0
@@ -131,7 +131,8 @@
    :tol 1d-9
    :stopfn #'(lambda (s x p) (tm x))
    :stopval tf
-   :stoptest #'>))
+   :stoptest #'>=
+   :stoptol 1d-6))
 (let ((p *eg-spinor-fixed*))
   (lethash (t0) p
     (setf (gethash :x0-cart p)
@@ -156,26 +157,29 @@
    :tf (coerce (encode-universal-time 0 0 0 27 2 2015 0) 'double-float)
    :rs-table (list
 	      (make-hash
-	       :rs (rotor (bve3 :e1e2 1) (atan (/ (sqrt 2d0))))
+	       :rs (rotor (make-instance 'bve3 :e1e2 1) (atan (/ (sqrt 2d0))))
 	       :stopfn #'(lambda (s x p) (tm x))
 	       :stopval (/ (+ t0 tf) 2)
-	       :stoptest #'>)
+	       :stoptest #'>=
+	       :stoptol 1d-6)
 	      (make-hash
-	       :rs (rotor (bve3 :e1e2 1) (atan (/ (sqrt 2d0))))
+	       :rs (rotor (make-instance 'bve3 :e1e2 1) (atan (/ (sqrt 2d0))))
 	       :stopfn #'(lambda (s x p) (tm x))
 	       :stopval tf
-	       :stoptest #'>))
+	       :stoptest #'>=
+	       :stoptol 1d-6))
    :s0 0d0
-   :sf (/ pi 14d0)
+   :dsf (/ pi 14d0)
    :x0-cart nil
    :x0 nil
-   :hmin (/ (- sf s0) 2000d0)
-   :hmax (/ (- sf s0) 2)
+   :hmin (/ dsf 2000d0)
+   :hmax (/ dsf 2)
    :eom #'eom
    :tol 1d-9
    :stopfn nil
    :stopval nil
-   :stoptest nil))
+   :stoptest nil
+   :stoptol 1d-6))
 (let ((p *eg-spinor-table*))
   (lethash (t0) p
     (setf (gethash :x0-cart p)
@@ -197,7 +201,7 @@
    :area (convert-unit '(1260d0 m^2) 'km^2)
    :iframe *j2000*
    :nfun #'first
-   :rs (rotor (bve3 :e1e2 1) (atan (/ (sqrt 2))))
+   :rs (rotor (make-instance 'bve3 :e1e2 1) (atan (/ (sqrt 2))))
    :t0 (coerce (encode-universal-time 0 0 0 27 2 2014 0) 'double-float)
    :tf (coerce (encode-universal-time 0 0 0 27 2 2015 0) 'double-float)
    :s0 0d0
@@ -238,27 +242,30 @@
    :tf (coerce (encode-universal-time 0 0 0 27 2 2015 0) 'double-float)
    :rs-table (list
 	      (make-hash
-	       :rs (rotor (bve3 :e1e2 1) (atan (/ (sqrt 2d0))))
+	       :rs (rotor (make-instance 'bve3 :e1e2 1) (atan (/ (sqrt 2d0))))
 	       :stopfn #'(lambda (s x p) (tm x))
 	       :stopval (/ (+ t0 tf) 2)
-	       :stoptest #'>)
+	       :stoptest #'>=
+	       :stoptol 1d-6)
 	      (make-hash
-	       :rs (rotor (bve3 :e1e2 1) (atan (/ (sqrt 2d0))))
+	       :rs (rotor (make-instance 'bve3 :e1e2 1) (atan (/ (sqrt 2d0))))
 	       :stopfn #'(lambda (s x p) (tm x))
 	       :stopval tf
-	       :stoptest #'>))
+	       :stoptest #'>=
+	       :stoptol 1d-6))
    :s0 0d0
-   :sf (/ pi 14d0)
+   :dsf (/ pi 14d0)
    :x0-cart nil
    :x0-spin nil
    :x0 nil
-   :hmin (/ (- sf s0) 2000d0)
-   :hmax (/ (- sf s0) 2)
+   :hmin (/ dsf 2000d0)
+   :hmax (/ dsf 2)
    :eom #'eom
    :tol 1d-9
    :stopfn nil
    :stopval nil
-   :stoptest nil))
+   :stoptest nil
+   :stoptol nil))
 (let ((p *eg-ks-table*))
   (lethash (t0 s0) p
     (setf (gethash :x0-cart p)
@@ -282,7 +289,7 @@
 
 (defun ks-earth-mars-objfun (ind)
   (with-slots (xvar) ind
-    (let* ((nvar 21)
+    (let* ((nvar 11)
 	   (t0 (coerce (encode-universal-time 0 0 0 27 2 2014 0) 'double-float))
 	   (n-rs (/ (1- nvar) 2))
 	   (dtf (first xvar))
@@ -301,7 +308,8 @@
 			:rs rs
 			:stopfn #'(lambda (s x p) (tm x))
 			:stopval tfi
-			:stoptest #'>)))
+			:stoptest #'>=
+			:stoptol 1d-6)))
 	   (problem
 	    (make-hash*
 	     :cb *ssb*
@@ -318,17 +326,18 @@
 	     :tf tf
 	     :rs-table rs-table
 	     :s0 0d0
-	     :sf (/ pi 14)
+	     :dsf (/ pi 14)
 	     :x0-cart nil
 	     :x0-spin nil
 	     :x0 nil
-	     :hmin (/ (- sf s0) 20000)
-	     :hmax (/ (- sf s0) 20)
+	     :hmin (/ dsf 20000)
+	     :hmax (/ dsf 20)
 	     :eom #'eom
-	     :tol 1d-12
+	     :tol 1d-9
 	     :stopfn nil
 	     :stopval nil
-	     :stoptest nil)))
+	     :stoptest nil
+	     :stoptol nil)))
       (setf (gethash :x0-cart problem)
 	    (position-velocity *earth* t0))
       (setf (gethash :x0-spin problem)
@@ -338,25 +347,29 @@
       (let* ((traj (propagate-ks-table problem))
 	     (sf (first (car (last traj))))
 	     (xf-ks (second (car (last traj))))
+	     (xf-spinor (to-spinor sf xf-ks problem))
 	     (xf-cart (to-cartesian sf xf-ks problem))
-	     (xf-target (position-velocity *mars* (print tf)))
-	     (xferr (norminfx (- xf-target xf-cart))))
+	     (xf-target (position-velocity *mars* tf))
+	     (xf-target-spinor (to-spinor tf xf-target (make-hash :iframe *j2000*)))
+	     (xferr (- xf-target-spinor xf-spinor)))
 	(values
-	 (list dtf xferr)
-	 nil))))) ; no constraints
+	 (list dtf (norminf (u xferr)) (norminf (duds xferr)))
+	 nil ; no constraints
+	 problem traj))))) ; for later evaluation of individuals
 
 (defparameter *ks-earth-mars-options*
   (make-instance
    'options
    :popsize 100
-   :ngen 200
-   :nobj 2
+   :ngen 100
+   :nobj 3
    :ncon 0
-   :nvar (+ 1 10 10)
-   :minvar (cons (convert-unit '(1 month) 'sec) (make-list 20 :initial-element (- (/ pi 2d0))))
-   :maxvar (cons (convert-unit '(5 years) 'sec) (make-list 20 :initial-element (/ pi 2d0)))
+   :nvar (+ 1 5 5)
+   :minvar (cons (convert-unit '(2 year) 'sec) (make-list 10 :initial-element (- (/ pi 2d0))))
+   :maxvar (cons (convert-unit '(5 years) 'sec) (make-list 10 :initial-element (/ pi 2d0)))
    :pcross 0.9d0
    :pmut 0.5d0
    :eta-c 10d0
    :eta-m 20d0
-   :objfun #'ks-earth-mars-objfun))
+   :objfun #'ks-earth-mars-objfun
+   :parallel t))
