@@ -20,7 +20,8 @@ by environment variable EPHEMERIS_DIR"
    (center :initarg :center)
    (mu :initarg :mu)
    (ls :initarg :ls :documentation "Solar luminosity")
-   (ls-du :initarg :ls-du :documentation "Distance unit where LS defined")))
+   (ls-du :initarg :ls-du :documentation "Distance unit where LS defined")
+   (iframe :initarg :iframe :initform *j2000* :documentation "List of basis vvectors for intertial frame")))
 
 (defparameter *j2000-utc-seconds*
   (+ (encode-universal-time 55 58 11 1 1 2000 0) 0.816d0))
@@ -35,14 +36,14 @@ by environment variable EPHEMERIS_DIR"
       (let ((pvv (spk-ezr name (utcsec-to-ephemeris-time teph) center :ref ref :abcorr abcorr)))
 	(make-instance 
 	 'cart-state
-	 :r (ve3 :e1 (aref pvv 0) :e2 (aref pvv 1) :e3 (aref pvv 2))
-	 :v (ve3 :e1 (aref pvv 3) :e2 (aref pvv 4) :e3 (aref pvv 5)))))))
+	 :r (make-instance 've3 :e1 (aref pvv 0) :e2 (aref pvv 1) :e3 (aref pvv 2))
+	 :v (make-instance 've3 :e1 (aref pvv 3) :e2 (aref pvv 4) :e3 (aref pvv 5)))))))
 
 (defmethod body-position ((b body) teph)
   "Position of body relative to its center"
   (with-slots (name ref abcorr center) b
     (let ((pv (spk-pos name (utcsec-to-ephemeris-time teph) center :ref ref :abcorr abcorr)))
-      (ve3 :e1 (aref pv 0) :e2 (aref pv 1) :e3 (aref pv 2)))))
+      (make-instance 've3 :e1 (aref pv 0) :e2 (aref pv 1) :e3 (aref pv 2)))))
 
 (defmethod body-trajectory (b t0 tf &key (nsteps 100))
   (with-ephemeris (slot-value b 'ephemeris)
