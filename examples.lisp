@@ -1,5 +1,9 @@
 (in-package :bld-orbit-new)
 
+;;; Ephemeris data
+
+(setq *ephemeris-dir* (merge-pathnames-as-directory (pathname-as-directory (uiop:getenv "HOME")) (pathname-as-directory "src/ephemeris")))
+
 ;;; Solar system bodies
 
 (defparameter *ssb*

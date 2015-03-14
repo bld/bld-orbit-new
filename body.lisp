@@ -1,11 +1,13 @@
 (in-package :bld-orbit-new)
 
+(defvar *ephemeris-dir*)
+
 (defun ephemeris-path (ephemeris)
   "Generate full path to an ephemeris file in the directory specified
 by environment variable EPHEMERIS_DIR"
   (namestring
    (merge-pathnames-as-file
-    (pathname-as-directory (uiop:getenv "EPHEMERIS_DIR"))
+    *ephemeris-dir*
     ephemeris)))
 
 (defmacro with-ephemeris (ephemeris &body body)
