@@ -183,7 +183,7 @@
    :stopfn nil
    :stopval nil
    :stoptest nil
-   :stoptol 1d-6))
+   :stoptol nil))
 (let ((p *eg-spinor-table*))
   (lethash (t0) p
     (setf (gethash :x0-cart p)
@@ -219,7 +219,8 @@
    :tol 1d-9
    :stopfn #'(lambda (s x p) (tm x))
    :stopval tf
-   :stoptest #'>))
+   :stoptest #'>
+   :stoptol 1d-6))
 (let ((p *eg-ks-fixed*))
   (lethash (t0 s0) p
     (setf (gethash :x0-cart p)
