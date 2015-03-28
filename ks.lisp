@@ -101,7 +101,7 @@
     (to-initial-ks 0d0 x0-spin problem)))
 
 (defun propagate-ks-fixed (problem)
-  (lethash (eom s0 sf x0 hmin hmax cb sun stopfn stopval stoptest) problem
+  (lethash (eom s0 sf x0 hmin hmax cb sun stopfn stopval stoptest stoptol) problem
     (with-kernel (ephemeris-path (slot-value cb 'ephemeris))
       (with-kernel (ephemeris-path (slot-value sun 'ephemeris))
 	(rka-stop-nr 
