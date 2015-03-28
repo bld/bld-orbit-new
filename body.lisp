@@ -43,9 +43,10 @@ by environment variable EPHEMERIS_DIR"
 
 (defmethod body-position ((b body) teph)
   "Position of body relative to its center"
-  (with-slots (name ref abcorr center) b
-    (let ((pv (spk-pos name (utcsec-to-ephemeris-time teph) center :ref ref :abcorr abcorr)))
-      (make-instance 've3 :e1 (aref pv 0) :e2 (aref pv 1) :e3 (aref pv 2)))))
+  (with-slots (ephemeris name ref abcorr center) b
+    (with-ephemeris ephemeris
+      (let ((pv (spk-pos name (utcsec-to-ephemeris-time teph) center :ref ref :abcorr abcorr)))
+	(make-instance 've3 :e1 (aref pv 0) :e2 (aref pv 1) :e3 (aref pv 2))))))
 
 (defmethod body-trajectory (b t0 tf &key (nsteps 100))
   (with-ephemeris (slot-value b 'ephemeris)
