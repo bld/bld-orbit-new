@@ -1,5 +1,35 @@
 (in-package :bld-orbit-new)
 
+(def-sc-state cart-kepler-state ()
+  :ivar tm
+  :pvar problem
+  :problem-keys (cb mu t0 tf x0 hmin hmax eom tol)
+  :states
+  ((r :initarg :r :accessor r :initform (ve3) :documentation "Position vector")
+   (v :initarg :v :accessor v :initform (ve3) :documentation "Velocity vector"))
+  :derived
+  ((r-cb (body-position cb tm))
+   (r-sc (+ r-cb r))
+   (ru (unitg r))
+   (rm2 (norme2 r))
+   (g (- (* (/ mu rm2) ru))))
+  :options
+  ((:documentation "Cartesian Kepler orbit state")))
+
+(defmethod print-object ((x cart-kepler-state) stream)
+  (format stream "#<CART-KEPLER-STATE :r ~a :v ~a>" (r x) (v x)))
+
+(defstatearithmetic cart-kepler-state (r v) :oslots (problem))
+
+(defmethod eom (tm (x cart-kepler-state) problem)
+  (setf (tm x) tm)
+  (make-instance 'cart-kepler-state :r (v x) :v (g x) :problem problem))
+
+(defun propagate-cart-kepler (problem)
+  (lethash (eom t0 tf x0 hmin hmax cb tol) problem
+    (with-kernel (ephemeris-path (slot-value cb 'ephemeris))
+      (rka eom t0 tf x0 :param problem :hmin hmin :hmax hmax :tol tol))))
+   
 (def-sc-state cart-state ()
   :ivar tm
   :pvar problem
